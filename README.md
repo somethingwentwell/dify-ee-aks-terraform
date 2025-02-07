@@ -26,7 +26,7 @@ Before using this repository, ensure you have the following installed:
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-org/dify-ee-aks-terraform.git
+   git clone https://github.com/somethingwentwell/dify-ee-aks-terraform
    cd dify-ee-aks-terraform
    ```
 
