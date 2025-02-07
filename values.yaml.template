@@ -1,0 +1,170 @@
+###################################
+# Please replace "dify123456" with your own value
+###################################
+global:
+  edition: "SELF_HOSTED"
+  appSecretKey: 'dify123456'
+  useTLS: false
+  consoleApiDomain: "<INGRESS_IP>.nip.io"
+  consoleWebDomain: "<INGRESS_IP>.nip.io"
+  serviceApiDomain: "<INGRESS_IP>.nip.io"
+  appApiDomain: "<INGRESS_IP>.nip.io"
+  appWebDomain: "<INGRESS_IP>.nip.io"
+  filesDomain: "<INGRESS_IP>.nip.io"
+  enterpriseDomain: "enterprise-<INGRESS_IP>.nip.io"
+  dbMigrationEnabled: true
+  rag:
+    etlType: "Unstructured"
+    keywordDataSourceType: "object_storage"
+  integrations:
+    notion:
+      # Notion import configuration, support public and internal
+      integrationType: "internal"
+      clientId: ""
+      clientSecret: ""
+      internalSecret: ""
+
+ingress:
+  enabled: true
+  # useIpAsHost: true
+  className: "traefik"
+  # annotations: {
+  #   # set file upload size limit
+  #   nginx.ingress.kubernetes.io/proxy-body-size: "15m"
+  # }
+
+api:
+  enabled: true
+  replicas: 1
+  innerApi:
+    enabled: true
+    apiKey: "dify123456"
+  serverWorkerAmount: 1
+worker:
+  enabled: true
+  replicas: 1
+  celeryWorkerAmount: 1
+web:
+  enabled: true
+  replicas: 1
+sandbox:
+  enabled: true
+  replicas: 1
+  apiKey: "dify123456"
+enterprise:
+  enabled: true
+  replicas: 1
+  # licenseServer: "https://license.dify.dev/server"
+  # licenseMode: "online"
+  appSecretKey: "dify123456"
+  innerApi:
+    enabled: true
+    apiKey: "dify123456"
+enterpriseFrontend:
+  enabled: true
+  replicas: 1
+ssrfProxy:
+  enabled: true
+  replicas: 1
+unstructured:
+  enabled: true
+  replicas: 1
+
+###################################
+# Persistence Configration
+###################################
+persistence:
+  type: "azure-blob"
+  azureBlob:
+    accountUrl: "<BLOB_ACCOUNT_URL>"
+    accountName: "<BLOB_ACCOUNT_NAME>"
+    accountKey: "<BLOB_ACCOUNT_KEY>"
+    containerName: "difydata"
+
+###################################
+# Mail Configuration
+###################################
+mail:
+  # Mail configuration, support: resend, smtp
+  type: ''
+  # default email sender from email address, if not not given specific address
+  defaultSender: 'YOUR EMAIL FROM (eg: no-reply <no-reply@dify.ai>)'
+  # the api-key for resend (https://resend.com)
+  resend:
+    apiKey: ''
+    apiUrl: https://api.resend.com
+  smtp:
+    server: ''
+    port: 587
+    username: ''
+    password: ''
+    useTLS: false
+
+###################################
+# postgres
+###################################
+postgresql:
+  enabled: false
+  # name: postgres
+  # global:
+  #   storageClass: ""
+  #   postgresql:
+  #     auth:
+  #       postgresPassword: "dify123456"
+  #       database: "dify"
+  #       username: ""
+  #       password: ""
+externalPostgres:
+  enabled: true
+  address: <POSTGRES_FQDN>
+  port: 5432
+  credentials:
+    dify:
+      database: "dify"
+      username: "<POSTGRES_ADMIN_USER>"
+      password: "<POSTGRES_ADMIN_PASSWORD>"
+      sslmode: "require"
+    enterprise:
+      database: "enterprise"
+      username: "<POSTGRES_ADMIN_USER>"
+      password: "<POSTGRES_ADMIN_PASSWORD>"
+      sslmode: "require"
+
+###################################
+# Redis
+###################################
+redis:
+  enabled: true
+  global:
+    redis:
+      password: "dify123456"
+externalRedis:
+  enabled: false
+
+###################################
+# vectorDB
+###################################
+qdrant:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: langgenius/qdrant
+    pullPolicy: IfNotPresent
+    tag: "v1.7.3"
+  apiKey: "dify123456"
+  persistence:
+    accessModes: [ "ReadWriteOnce" ]
+    size: 10Gi
+  resources: { }
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  nodeSelector: {}
+vectorDB:
+  useExternal: false
+
+imagePullSecrets:
+  - name: dify-artifacts-token
